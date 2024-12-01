@@ -29,21 +29,22 @@ public class UserController {
 
     @RequestMapping("/admin/user")
     public String getUserPage(Model model) {
-        model.addAttribute("newUser", new User());
+        List<User> users = this.userService.getAllUsers();
+        model.addAttribute("users", users);
+        System.out.println("List users is: " + users);
+        return "admin/user/tableuser"; // trang getuser.html
+    }
+
+    @RequestMapping("/admin/user/create")
+    public String getCreateUserPage(Model model) {
+        model.addAttribute("newUser", new User()); // tạo user
         return "admin/user/create"; // file create.html
     }
 
-    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST) // lưu user
     public String createUserPage(@ModelAttribute("newUser") User phuccoder) {
         System.out.println("Create here " + phuccoder);
         this.userService.saveUser(phuccoder);
-        return "hello"; // file hello.html
-    }
-
-    @RequestMapping("/admin/user/getuser")
-    public String getUserView(Model model) {
-        List<User> users = this.userService.getAllUsers();
-        model.addAttribute("users", users);
-        return "admin/user/getuser"; // trang getuser.html
+        return "redirect:/admin/user"; // trả về url /admin/user
     }
 }
